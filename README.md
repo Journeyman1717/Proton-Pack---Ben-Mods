@@ -2,5 +2,9 @@ In GBLEDPatterns.h find where the cyclotron LED's (40 or 50) are addressed. They
 
 Determine how to mix GRBW and GRB LEDs in the same dataconnection LED's in the cyclotron are GRB and the LED's elsewhere are GRBW.
 
+Additional Libraries needed:
+DFPlayerMini_Fast
+FastLED
+
 Optional:
   Add the additional Functions as time permits.
