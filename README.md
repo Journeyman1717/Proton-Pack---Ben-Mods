@@ -4,6 +4,9 @@ Determine how to mix GRBW and GRB LEDs in the same dataconnection LED's in the c
   Looks like you cant mix RGB and RGBW LED's in the same "string" like i did, I will have to find a new Output pin for the Cyclotron. This may make the above change moot.
   https://forums.adafruit.com/viewtopic.php?t=110803
 
+PIN 10 currently has no connection. I could move the Cyclotron to Pin 10 (50 LEDs)  But we would need to seperate the Power Cell Code from the Cyclotron Code.
+
+
 Additional Libraries needed:
 DFPlayerMini_Fast
 FastLED
