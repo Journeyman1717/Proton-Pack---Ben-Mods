@@ -35,66 +35,66 @@ BarGraphSequences BGMODE;
 #include "SoftwareSerial.h"
 #include <DFPlayerMini_Fast.h>
 
-SoftwareSerial mySoftwareSerial(11, 12); // RX, TX - Changed for Ben's Pack
+SoftwareSerial mySoftwareSerial(11, 12);  // RX, TX - Changed for Ben's Pack
 DFPlayerMini_Fast myDFPlayer;
 
 // Audio Tracks - Note DFPlayer is sensitive to file order
-unsigned long  StartupTrack = 1;
-unsigned long  ThemeSWTrack = 3;
-unsigned long  SlimeSWTrack = 32;
-unsigned long  MesonSWTrack = 31;
-unsigned long  ChristmasSWTrack = 26;
+unsigned long StartupTrack = 1;
+unsigned long ThemeSWTrack = 3;
+unsigned long SlimeSWTrack = 32;
+unsigned long MesonSWTrack = 31;
+unsigned long ChristmasSWTrack = 26;
 
-unsigned long  FireMovie = 11;
-unsigned long  FireCrossStreams = 12;
-unsigned long  FireStasis = 13;
-unsigned long  FireSlime = 14;
-unsigned long  FireMeson = 15;
-unsigned long  FireChristmas = 21;
-unsigned long  FireAfterlife = 34;
+unsigned long FireMovie = 11;
+unsigned long FireCrossStreams = 12;
+unsigned long FireStasis = 13;
+unsigned long FireSlime = 14;
+unsigned long FireMeson = 15;
+unsigned long FireChristmas = 21;
+unsigned long FireAfterlife = 34;
 
-unsigned long  MovieTail = 4;
-unsigned long  StasisTail = 22;
-unsigned long  SlimeTail = 23;
-unsigned long  MesonTail = 24;
-unsigned long  ChristmasTail = 25;
+unsigned long MovieTail = 4;
+unsigned long StasisTail = 22;
+unsigned long SlimeTail = 23;
+unsigned long MesonTail = 24;
+unsigned long ChristmasTail = 25;
 
-unsigned long  shutdownTrack = 10;
-unsigned long  IdleMovieStart = 5;
-unsigned long  IdleMovieLoop = 2;
-unsigned long  IdleSlimeStart = 27;
-unsigned long  IdleSlimeLoop = 28;
-unsigned long  IdleMesonStart = 29;
-unsigned long  IdleMesonLoop = 30;
-unsigned long  IdleAfterlifeLoop = 35;
+unsigned long shutdownTrack = 10;
+unsigned long IdleMovieStart = 5;
+unsigned long IdleMovieLoop = 2;
+unsigned long IdleSlimeStart = 27;
+unsigned long IdleSlimeLoop = 28;
+unsigned long IdleMesonStart = 29;
+unsigned long IdleMesonLoop = 30;
+unsigned long IdleAfterlifeLoop = 35;
 
-unsigned long  clickTrack = 8;
-unsigned long  chargeTrack = 7;
-unsigned long  ventTrack = 9;
-unsigned long  SlimeRefillTrack = 33;
+unsigned long clickTrack = 8;
+unsigned long chargeTrack = 7;
+unsigned long ventTrack = 9;
+unsigned long SlimeRefillTrack = 33;
 
-unsigned long  warnMovie = 16;
-unsigned long  warnStasis = 17;
-unsigned long  warnSlime = 18;
-unsigned long  warnMeson = 19;
-unsigned long  warnCrossStreams = 20;
-unsigned long  warnAfterlife = 16;
+unsigned long warnMovie = 16;
+unsigned long warnStasis = 17;
+unsigned long warnSlime = 18;
+unsigned long warnMeson = 19;
+unsigned long warnCrossStreams = 20;
+unsigned long warnAfterlife = 16;
 
 unsigned long currenttrack = 1;
 
 /*************************************************************************
     Initiate LED Variables
 *************************************************************************/
-int seq_1_current = 0;  // current led in sequence 1
-const int num_led = 28; // total number of leds in bar graph // Changed for Ben's Pack
-unsigned long firing_interval = 40; // interval at which to cycle firing lights on the bargraph. We update this in the loop to speed up the animation so must be declared here (milliseconds).
+int seq_1_current = 0;               // current led in sequence 1
+const int num_led = 28;              // total number of leds in bar graph // Changed for Ben's Pack
+unsigned long firing_interval = 40;  // interval at which to cycle firing lights on the bargraph. We update this in the loop to speed up the animation so must be declared here (milliseconds).
 
 // Ben's Edits Wand LED's
 const int WhiteLED1 = 0;
 const int ThemeLED = 1;
-const int WandVentStart = 2; // New
-const int WandVentEnd = 8; // New
-const int WandVentLED = 5; // added to use a single LED
+const int WandVentStart = 2;  // New
+const int WandVentEnd = 8;    // New
+const int WandVentLED = 5;    // added to use a single LED
 const int OrangeHatLED = 9;
 const int WhiteLED2 = 10;
 const int SloBloLED = 11;
@@ -126,22 +126,23 @@ const int GunLEDEnd = 16;
 // *** Note these constants may change if you are using different LED counts, E.g. 1 LED vs a 7 LED Neopixel Jewel *** //
 
 // Pack LED Count - Changed for Ben's Pack
-const int NeoPixelLEDCountPack = 48; // does not include cyclotron
-
-const int NeoPixelLEDCountCyc = 50; // added as seperate output on Ben's pack
-
-const int NeoPixelLEDCountWand = 19; // Wand LED Count - Changed for Ben's Pack
+const int NeoPixelLEDCountPack = 48;  // does not include cyclotron
+const int NeoPixelLEDCountCyc = 50;  // added as seperate output on Ben's pack
+const int NeoPixelLEDCountWand = 19;  // Wand LED Count - Changed for Ben's Pack
 
 void PackLEDsComplete();
 void CycLEDsComplete();
 
 #define NEO_WAND 3 // for powercell
-Adafruit_NeoPixel wandLights = Adafruit_NeoPixel(NeoPixelLEDCountWand, NEO_WAND, NEO_GRBW + NEO_KHZ800); // Changed NEO_GRB to NEO_GRBW
+Adafruit_NeoPixel wandLights = Adafruit_NeoPixel(NeoPixelLEDCountWand, NEO_WAND, NEO_GRBW + NEO_KHZ800);  // Changed NEO_GRB to NEO_GRBW
 
 // Call Cyclotron Patterns Class
-NeoPatterns PackLEDs(NeoPixelLEDCountPack, 2, NEO_GRBW + NEO_KHZ800, &PackLEDsComplete); // Changed NEO_GRB to NEO_GRBW
+NeoPatterns CycLEDs(NeoPixelLEDCountCyc, 10, NEO_GRB + NEO_KHZ800, &CycLEDsComplete);  // Added becasue the Cyclotron is a seperate output for Ben's Pack
 
-NeoPatterns CycLEDs(NeoPixelLEDCountCyc, 10, NEO_GRB + NEO_KHZ800, &CycLEDsComplete);// Added becasue the Cyclotron is a seperate output for Ben's Pack
+// Call Cyclotron Patterns Class
+NeoPatterns PackLEDs(NeoPixelLEDCountPack, 2, NEO_GRBW + NEO_KHZ800, &PackLEDsComplete);  // Changed NEO_GRB to NEO_GRBW
+
+
 
 // ******************* Pack Status / State Arrays ******************* //
 enum PackState { OFF, BOOTING, BOOTED, POWERDOWN };
@@ -157,13 +158,13 @@ enum PackTheme { MOVIE, STATIS, SLIME, MESON, CHRISTMAS };
 enum PackTheme THEME;
 
 // ******************* inputs for switches and buttons ******************* //
-const int STARTWAND_SWITCH = 5; // Updated for Ben's Pack - Swapped Input with 6
-const int STARTPACK_SWITCH = 8; // Updated for Ben's Pack - Swapped Input with 7
-const int MUSIC_SWITCH = 7; // Updated for Ben's Pack - Swapped Input with 8
+const int STARTWAND_SWITCH = 5;  // Updated for Ben's Pack - Swapped Input with 6
+const int STARTPACK_SWITCH = 8;  // Updated for Ben's Pack - Swapped Input with 7
+const int MUSIC_SWITCH = 7;      // Updated for Ben's Pack - Swapped Input with 8
 const int FIRE_BUTTON = 4;
-const int FIRE_BUTTON2 = 6; // Updated for Ben's Pack - Swapped Input with 5
-const int VENTING = 9; // Output
-const int ISPLAYING_OUT = 13; // Changed from 12 to 13 
+const int FIRE_BUTTON2 = 6;    // Updated for Ben's Pack - Swapped Input with 5
+const int VENTING = 9;         // Output
+const int ISPLAYING_OUT = 13;  // Changed from 12 to 13
 //const int RUMBLE = 13; // Output // Rumble not used
 
 // ******************* Pack states or logic variables ******************* //
@@ -196,7 +197,7 @@ unsigned long fire_intervalC = 100;
 unsigned long FireRate = 0;
 unsigned long FireRate2 = 0;
 
-unsigned long cycIdleRate[5] = {95, 5, 95, 95, 50};
+unsigned long cycIdleRate[5] = { 95, 5, 95, 95, 50 };
 
 unsigned long firingStateMillis;
 unsigned long VentMillis;
@@ -242,7 +243,7 @@ void setup() {
   digitalWrite(FIRE_BUTTON2, HIGH);
   pinMode(VENTING, OUTPUT);
   digitalWrite(VENTING, HIGH);
-  //  pinMode(RUMBLE, OUTPUT); // Rumble has been Removed
+  // pinMode(RUMBLE, OUTPUT); // Rumble has been Removed
   // digitalWrite(RUMBLE, LOW); // Rumble has been Removed
 
   pinMode(ISPLAYING_OUT, INPUT);
@@ -253,27 +254,25 @@ void setup() {
   wandLights.show();
 
   // ***** Configure Proton Pack LED's ***** //
-  CycLEDs.begin();
-  CycLEDs.Color1 = CycLEDs.Wheel(255); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+  CycLEDs.begin();  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+  CycLEDs.Color1 = CycLEDs.Wheel(255);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
   PackLEDs.begin();
   PackLEDs.Color2 = PackLEDs.Wheel(170);
 
   // ***** Set the intial pack status to off ***** //
   STATUS = OFF;
-  THEME = MOVIE; // Changed to Start In AfterLife Mode
+  THEME = MOVIE;  // Changed to Start In AfterLife Mode
   // ***** Start with LED's off ***** //
   clearLEDs();
   delay(500);
 }
-
 
 bool firestart = false;
 unsigned long CuurentBGInterval = BarGraph.IntervalBG;
 /*************************************************************************
                                  Main Loop Function
  *************************************************************************/
-void loop()
-{
+void loop() {
 
   // put your main code here, to run repeatedly:
   unsigned long currentMillis = millis();
@@ -289,6 +288,12 @@ void loop()
   //Serial.println(startpack) ;
   getWandSTATUS();
 
+  //Serial.println(fire); confimred that the system doesn't think the fire button its being pressed.
+  //Serial.println(IsPlaying); Stays High (1) not sure what that means
+  //Serial.println(THEME); Returns nothing
+  Serial.println(fire);
+  Serial.println(fire2);
+
   /*
      Switch logic
      Activate Pack - Switch 1
@@ -300,95 +305,78 @@ void loop()
   /********************************************************************************
       Play / Change music (Fire Button 1) or Change Theme (Fire Button 2)
    ********************************************************************************/
-  if (musicmode == true)
-  {
-    if (fire2 == false &&  fire2ButtonState == false)
-    {
-      if (STATUS == BOOTED)
-      {
-        switch (THEME)
-        {
+  if (musicmode == true) {
+    if (fire2 == false && fire2ButtonState == false) {
+      if (STATUS == BOOTED) {
+        switch (THEME) {
           case MOVIE:
             THEME = STATIS;
-            CycLEDs.setBrightness(10);// changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[1], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.setBrightness(10);                                 // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[1], THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             myDFPlayer.play(ThemeSWTrack);
             break;
           case STATIS:
             THEME = SLIME;
-            CycLEDs.setBrightness(240); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[2], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.setBrightness(240);                                // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[2], THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             myDFPlayer.play(SlimeSWTrack);
             break;
           case SLIME:
             THEME = MESON;
-            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[3], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[3], THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             myDFPlayer.play(MesonSWTrack);
             break;
           case MESON:
             THEME = CHRISTMAS;
-            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[4], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[4], THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             myDFPlayer.play(ChristmasSWTrack);
             break;
           case CHRISTMAS:
             THEME = MOVIE;
-            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[0], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[0], THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             myDFPlayer.play(ThemeSWTrack);
             break;
         }
       }
       fire2ButtonState = true;
       musicmodestart = false;
-    }
-    else
-    {
-      if (fire2 == true)
-      {
+    } else {
+      if (fire2 == true) {
         fire2ButtonState = false;
       }
     }
-    if (fire == false && fireButtonState == false)
-    {
+    if (fire == false && fireButtonState == false) {
       fireButtonState = true;
-      if (musicmodestart == false)
-      {
+      if (musicmodestart == false) {
         myDFPlayer.playFolder(1, 1);
         musicmodestart = true;
-      }
-      else
-      {
+      } else {
         myDFPlayer.playNext();
       }
-    }
-    else
-    {
-      if (fire == true)
-      {
+    } else {
+      if (fire == true) {
         fireButtonState = false;
       }
     }
-  }
-  else
-  {
+  } else {
     musicmodestart = false;
   }
   /********************************************************************************
       Logic routine, Checks for the wand status to activate the pack and wand features
    ********************************************************************************/
-  if (WANDSTATUS == ON_PACK) // Turn on the Proton Pack if both the wand activate switch and Pack switch are ON
+  if (WANDSTATUS == ON_PACK)  // Turn on the Proton Pack if both the wand activate switch and Pack switch are ON
   {
     // ***** If Booting from a start start the booting routine ***** //
-    if (PowerOff == true && startpack == true ) // If fresh poweron
+    if (PowerOff == true && startpack == true)  // If fresh poweron
     {
       myDFPlayer.play(StartupTrack);
       BarGraph.initiateVariables(ACTIVE);
       STATUS = BOOTING;
       //setVentLightState(ventStart, ventEnd, 2); // ventStart, ventEnd removed
-      CycLEDs.CyclotronBoot(CycLEDs.Wheel(255), 50, THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+      CycLEDs.CyclotronBoot(CycLEDs.Wheel(255), 50, THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
       PackLEDs.PowercellBoot(PackLEDs.Wheel(170), 30);
     }
-    switch (STATUS)
-    {
+    switch (STATUS) {
       case OFF:
         // Logic if wand is on but pack is off? /////////////
         /*
@@ -400,8 +388,8 @@ void loop()
       case BOOTING:
         PowerOff = false;
         BarGraph.sequencePackOn(currentMillis);
-        setWandLightState(4, 7, currentMillis); //set sloblow red blinking
-        setWandLightState(WhiteLED2, 1, 0);    //  set Wand ON LED white
+        setWandLightState(4, 7, currentMillis);  //set sloblow red blinking
+        setWandLightState(WhiteLED2, 1, 0);      //  set Wand ON LED white
         break;
       /********************************************************************************
          Logic routine for when the pack is fully booted, gun features work
@@ -410,64 +398,53 @@ void loop()
         // ***** Based on the pack status and wand status run LED routine ***** //
         WandLightState(currentMillis);
         //Serial.println(WANDLEDSTATUS);
-        if (WANDLEDSTATUS == NORMAL)
-        {
+        if (WANDLEDSTATUS == NORMAL) {
           BarGraph.sequencePackOn(currentMillis);
         }
-        if (IsPlaying == true && musicmode == false && WANDLEDSTATUS == NORMAL)
-        {
+        if (IsPlaying == true && musicmode == false && WANDLEDSTATUS == NORMAL) {
           //          DFPlayerStart = true;
           //          DFPTrack = IdleMovieLoop;
           //          playType = 1;
-          switch (THEME) // MOVIE, STATIS, SLIME, MESON, CHRISTMAS
-          { 
+          switch (THEME)  // MOVIE, STATIS, SLIME, MESON, CHRISTMAS
+          {
             case MOVIE:
-            myDFPlayer.loop(IdleMovieLoop);
-            break;
+              myDFPlayer.loop(IdleMovieLoop);
+              break;
             case STATIS:
-            myDFPlayer.loop(IdleAfterlifeLoop);
-            break;
+              myDFPlayer.loop(IdleAfterlifeLoop);
+              break;
             case SLIME:
-            myDFPlayer.loop(IdleSlimeLoop);
-            break;
+              myDFPlayer.loop(IdleSlimeLoop);
+              break;
             case MESON:
-            myDFPlayer.loop(IdleMesonLoop);
-            break;
+              myDFPlayer.loop(IdleMesonLoop);
+              break;
             case CHRISTMAS:
-            myDFPlayer.loop(IdleMovieLoop);
-            break;
+              myDFPlayer.loop(IdleMovieLoop);
+              break;
           }
-          
         }
         /********************************************************************************
                         Firing button is pushed, start firing sequence
         ********************************************************************************/
         fire = digitalRead(FIRE_BUTTON);
         fire2 = digitalRead(FIRE_BUTTON2);
-        if ((fire == false && musicmode == false) || (fire2 == false && musicmode == false))
-        {
-          if (WANDLEDSTATUS != WARNING && WANDLEDSTATUS != FASTWARNING)
-          {
+        if ((fire == false && musicmode == false) || (fire2 == false && musicmode == false)) {
+          if (WANDLEDSTATUS != WARNING && WANDLEDSTATUS != FASTWARNING) {
             WANDLEDSTATUS = FIRING;
           }
-          if (IsFiring == false)
-          {
-            if (fire2 == false && fire == true && WANDLEDSTATUS != WARNING) // ***** Are the streams crossed? ***** //
+          if (IsFiring == false) {
+            if (fire2 == false && fire == true && WANDLEDSTATUS != WARNING)  // ***** Are the streams crossed? ***** //
             {
-              if (THEME != MOVIE)
-              {
+              if (THEME != MOVIE) {
                 PlaySoundTrack(FIRING);
-              }
-              else
-              {
+              } else {
                 PlaySoundTrack(STREAMCROSS);
               }
               //########### CHange to crossing the streams sound
               BarGraph.initiateVariables(FIRE2);
               BarGraph.clearLEDs();
-            }
-            else if ((fire2 == true || fire == false) && WANDLEDSTATUS != WARNING)
-            {
+            } else if ((fire2 == true || fire == false) && WANDLEDSTATUS != WARNING) {
               PlaySoundTrack(FIRING);
               BarGraph.initiateVariables(FIRE1);
               BarGraph.clearLEDs();
@@ -476,27 +453,22 @@ void loop()
             firingStateMillis = currentMillis;
             IsFiring = true;
             PackLEDs.AL_Fire(true);
-            CycLEDs.AL_Fire(true); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.AL_Fire(true);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
           }
-          if (fire2 == false && fire == true)
-          {
-            setWandLightState(OrangeHatLED, 1, 0); // Set gun button 2 LED white
+          if (fire2 == false && fire == true) {
+            setWandLightState(OrangeHatLED, 1, 0);  // Set gun button 2 LED white
             BarGraph.sequenceFire2(currentMillis);
             // digitalWrite(RUMBLE, HIGH); // Rumble has been removed
-          }
-          else if (fire == false && fire2 == true)
-          {
+          } else if (fire == false && fire2 == true) {
             BarGraph.sequenceFire1(currentMillis);
             // digitalWrite(RUMBLE, HIGH); // Rumble has been removed
           }
-          WandFire(currentMillis); // Runs routine to speed up Cyclotron LEDs
+          WandFire(currentMillis);  // Runs routine to speed up Cyclotron LEDs
 
           // Start Firing timing and at 10 seconds vent pack
           // After 10 seconds start the warning routing on the wand
-          if ((millis() - firingStateMillis) >= firingalarm)
-          {
-            if (WANDLEDSTATUS == WARNING)
-            {
+          if ((millis() - firingStateMillis) >= firingalarm) {
+            if (WANDLEDSTATUS == WARNING) {
               PlaySoundTrack(FASTWARNING);
               //BarGraph.changeInterval(10);
             }
@@ -504,29 +476,25 @@ void loop()
             shouldVent = true;
           }
           // After 5 seconds start the alarm routing on the wand
-          else if ((millis() - firingStateMillis) >= firingwarning)
-          {
+          else if ((millis() - firingStateMillis) >= firingwarning) {
             WANDLEDSTATUS = WARNING;
             //BarGraph.changeInterval(20);
           }
 
-        }
-        else // ***** Fire has stopped, Check if venting is required, reset ***** //
+        } else  // ***** Fire has stopped, Check if venting is required, reset ***** //
         {
           /*
               If you were just firing, reset things back to normal
           */
 
           // *** Only do this once after firing *** //
-          if (IsFiring == true)
-          {
+          if (IsFiring == true) {
             // ** Play tail end firing sound ** //
-            if (shouldVent != true)
-            {
+            if (shouldVent != true) {
               PlaySoundTrack(NORMAL);
             }
             // ** Reset Pack LED intervals ** //
-            CycLEDs.CyclotronInterval(cycIdleRate[THEME]); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.CyclotronInterval(cycIdleRate[THEME]);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             PackLEDs.PowercellInterval(75);
 
             // ** Turn off firing rumble ** //
@@ -537,60 +505,49 @@ void loop()
           FireRate2 = 0;
 
           // ** If you should be venting start the ventine routine ** //
-          if (shouldVent == true)
-          {
+          if (shouldVent == true) {
             shouldVent = false;
             venting = true;
             VentMillis = currentMillis;
-          }
-          else if (venting == true)
-          {
+          } else if (venting == true) {
             /* Venting Routine
 
                Play the venting track, start the bargraph venting animation, turn on N-Filter LED's.
             */
-            if (WANDLEDSTATUS == FASTWARNING)
-            {
+            if (WANDLEDSTATUS == FASTWARNING) {
               myDFPlayer.play(ventTrack);
               BarGraph.initiateVariables(BGVENT);
-
             }
             WANDLEDSTATUS = VENTSTATE;
             PackLEDs.VentPack();
-            CycLEDs.VentPack(); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+            CycLEDs.VentPack();  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
             BarGraph.sequenceVent(currentMillis);
 
 
 
             // ** Clear venting routine after the venting interval ** //
-            if ((currentMillis - VentMillis) >= venting_interval)
-            {
+            if ((currentMillis - VentMillis) >= venting_interval) {
               venting = false;
               PowerOff = true;
               WANDLEDSTATUS = NORMAL;
               BarGraph.initiateVariables(ACTIVE);
-              if (THEME == 1)
-              {
+              if (THEME == 1) {
                 PackLEDs.AL_Fire(false);
                 PackLEDs.setBrightness(10);
-                CycLEDs.AL_Fire(false); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-                CycLEDs.AL_Fire(10); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+                CycLEDs.AL_Fire(false);     // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+                CycLEDs.setBrightness(10);  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
               }
             }
-          }
-          else
-          {
+          } else {
             // ** If you are not in a normal state, set everything back to normal.
-            if (WANDLEDSTATUS != NORMAL && venting == false)
-            {
+            if (WANDLEDSTATUS != NORMAL && venting == false) {
               WANDLEDSTATUS = NORMAL;
               BarGraph.initiateVariables(ACTIVE);
-              if (THEME == 1)
-              {
+              if (THEME == 1) {
                 PackLEDs.AL_Fire(false);
                 PackLEDs.setBrightness(10);
-                CycLEDs.AL_Fire(false); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-                CycLEDs.AL_Fire(10); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+                CycLEDs.AL_Fire(false);     // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+                CycLEDs.setBrightness(10);  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
               }
             }
           }
@@ -599,13 +556,10 @@ void loop()
       case POWERDOWN:
         break;
     }
-  }
-  else if (WANDSTATUS == ON) // run this if only the wand is ON
+  } else if (WANDSTATUS == ON)  // run this if only the wand is ON
   {
-    if (STATUS != OFF)
-    {
-      if (shuttingDown == false)
-      {
+    if (STATUS != OFF) {
+      if (shuttingDown == false) {
         BarGraph.clearLEDs();
         BarGraph.initiateVariables(START);
         myDFPlayer.play(shutdownTrack);
@@ -613,14 +567,12 @@ void loop()
         STATUS = POWERDOWN;
         shuttingDown = true;
         PackLEDs.PowerDown(100);
-        CycLEDs.PowerDown(100); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+        CycLEDs.PowerDown(100);  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
       }
 
-    }
-    else // ***** If turing wand on from off State play CLICK ***** //
+    } else  // ***** If turing wand on from off State play CLICK ***** //
     {
-      if (WANDLEDSTATUS != WANDONLY)
-      {
+      if (WANDLEDSTATUS != WANDONLY) {
         myDFPlayer.play(clickTrack);
         BarGraph.initiateVariables(START);
         musicmodestart = false;
@@ -629,21 +581,18 @@ void loop()
     WANDLEDSTATUS = WANDONLY;
     WandLightState(currentMillis);
     BarGraph.sequenceStart(currentMillis);
-  }
-  else // IF both the wand switch and pack switch are off
+  } else  // IF both the wand switch and pack switch are off
   {
-    switch (STATUS)
-    {
+    switch (STATUS) {
       case OFF:
         WANDLEDSTATUS = ALLOFF;
         BarGraph.sequenceShutdown(currentMillis);
         WandLightState(currentMillis);
         PackLEDs.PowerDown(100);
-        CycLEDs.PowerDown(100); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+        CycLEDs.PowerDown(100);  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
         break;
       case BOOTED:
-        if (shuttingDown == false)
-        {
+        if (shuttingDown == false) {
           BarGraph.IntervalBG = 80;
           myDFPlayer.play(shutdownTrack);
           musicmodestart = false;
@@ -653,13 +602,12 @@ void loop()
           WandLightState(currentMillis);
           shuttingDown = true;
           PackLEDs.PowerDown(100);
-          CycLEDs.PowerDown(100); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+          CycLEDs.PowerDown(100);  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
         }
         BarGraph.sequenceShutdown(currentMillis);
         break;
       case BOOTING:
-        if (shuttingDown == false)
-        {
+        if (shuttingDown == false) {
           BarGraph.IntervalBG = 80;
           myDFPlayer.play(shutdownTrack);
           musicmodestart = false;
@@ -669,7 +617,7 @@ void loop()
           WandLightState(currentMillis);
           shuttingDown = true;
           PackLEDs.PowerDown(100);
-          CycLEDs.PowerDown(100); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+          CycLEDs.PowerDown(100);  // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
         }
         BarGraph.sequenceShutdown(currentMillis);
         break;
@@ -678,45 +626,36 @@ void loop()
         break;
     }
   }
-  PackLEDs.Update();
-  //CycLEDs.Update(); // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+  PackLEDs.Update();  // This is required to call the pack lights to update
+  CycLEDs.Update();   // added to be CycLEDs becasue Cyclotron LEDs are on Pin 10
   wandLights.show();
   //delay(1);
 }
 
-void WandFire(unsigned long currentMillis)
-{
-  if ((currentMillis - prevCycMillis) >= fire_interval)
-  {
+void WandFire(unsigned long currentMillis) {
+  if ((currentMillis - prevCycMillis) >= fire_interval) {
     FireRate++;
     prevCycMillis = currentMillis;
-    if ( FireRate > 95)
-    {
-      CycLEDs.CyclotronInterval(95 - 94); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    if (FireRate > 95) {
+      CycLEDs.CyclotronInterval(95 - 94);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
       PackLEDs.PowercellInterval(95 - 94);
-    }
-    else
-    {
-      CycLEDs.CyclotronInterval(95 - FireRate); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    } else {
+      CycLEDs.CyclotronInterval(95 - FireRate);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
       PackLEDs.PowercellInterval(95 - FireRate);
     }
   }
   //
-  if ((currentMillis - prevBGMillis) >= (CuurentBGInterval * 4.75))
-  {
+  if ((currentMillis - prevBGMillis) >= (CuurentBGInterval * 4.75)) {
     prevBGMillis = currentMillis;
-    if (BarGraph.IntervalBG >= 1)
-    {
+    if (BarGraph.IntervalBG >= 1) {
       BarGraph.changeInterval(BarGraph.IntervalBG - 1);
     }
   }
 }
 
 // Powercell Boot Sequence Completion Callback
-void PackLEDsComplete()
-{
-  if (STATUS == BOOTING)
-  {
+void PackLEDsComplete() {
+  if (STATUS == BOOTING) {
     STATUS = BOOTED;
     WANDLEDSTATUS = NORMAL;
     PowerBooted = true;
@@ -725,55 +664,46 @@ void PackLEDsComplete()
     //CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[THEME], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
     PackLEDs.Powercell(PackLEDs.Color2, 75);
     PackLEDs.PowercellClear();
-  }
-  else if (STATUS == POWERDOWN)
-  {
+  } else if (STATUS == POWERDOWN) {
     PowerOff = true;
     shuttingDown = false;
     PowerBooted = false;
     //CycLEDs.Color1 = CycLEDs.Wheel(0); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
     PackLEDs.Color2 = PackLEDs.Wheel(0);
     //CycLEDs.ActivePatternCyc =  NONE; // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-    PackLEDs.ActivePatternPC =  NONE;
+    PackLEDs.ActivePatternPC = NONE;
     clearLEDs();
     STATUS = OFF;
-    if (WANDSTATUS == WANDOFF)
-    {
+    if (WANDSTATUS == WANDOFF) {
       THEME = MOVIE;
     }
-
   }
 }
 
-void CycLEDsComplete()
+void CycLEDsComplete()  //added becasue the Cyclotron is on its own Pin 10
 {
-  if (STATUS == BOOTING)
-  {
+  if (STATUS == BOOTING) {
     STATUS = BOOTED;
     WANDLEDSTATUS = NORMAL;
     PowerBooted = true;
-    CycLEDs.IndexCycLEDArray = 0; // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-    CycLEDs.IndexCyc = 0; // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-    CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[THEME], THEME); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    CycLEDs.IndexCycLEDArray = 0;                                  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    CycLEDs.IndexCyc = 0;                                          // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    CycLEDs.Cyclotron(CycLEDs.Color1, cycIdleRate[THEME], THEME);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
     //PackLEDs.Powercell(PackLEDs.Color2, 75);
     //PackLEDs.PowercellClear();
-  }
-  else if (STATUS == POWERDOWN)
-  {
+  } else if (STATUS == POWERDOWN) {
     PowerOff = true;
     shuttingDown = false;
     PowerBooted = false;
-    CycLEDs.Color1 = CycLEDs.Wheel(0); // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
-    //PackLEDs.Color2 = PackLEDs.Wheel(0);
-    CycLEDs.ActivePatternCyc =  NONE; // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    CycLEDs.Color1 = CycLEDs.Wheel(0);  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
+    PackLEDs.Color2 = PackLEDs.Wheel(0);
+    CycLEDs.ActivePatternCyc = NONE;  // changed to be CycLEDs becasue Cyclotron LEDs are on Pin 10
     //PackLEDs.ActivePatternPC =  NONE;
     clearLEDs();
     STATUS = OFF;
-    if (WANDSTATUS == WANDOFF)
-    {
+    if (WANDSTATUS == WANDOFF) {
       THEME = MOVIE;
     }
-
   }
 }
 
@@ -791,8 +721,7 @@ void CycLEDsComplete()
 
 */
 
-void WandLightState(unsigned long currentMillis)
-{
+void WandLightState(unsigned long currentMillis) {
   switch (WANDLEDSTATUS)  // enum WandSLEDState { ALLOFF, WANDONLY, NORMAL, FIRING, WARNING, FASTWARNING, VENTSTATE };
   {
     case ALLOFF:
@@ -800,67 +729,63 @@ void WandLightState(unsigned long currentMillis)
       break;
     case WANDONLY:
       setWandLightState(WhiteLED2, 1, 0);    //  set back light white
-      setWandLightState(WandVentLED, 4, 0);    //  set wand vent led OFF  // WandVentLED now has a start and end
+      setWandLightState(WandVentLED, 4, 0);  //  set wand vent led OFF  // WandVentLED now has a start and end
       setWandLightState(SloBloLED, 4, 0);    //  set sloblo  led OFF
       //setVentLightState(ventStart, ventEnd, 2); // ventStart and ventEnd have been removed
-      setWandLightState(9, 4, 0); //Turn off Gun LED's
+      setWandLightState(9, 4, 0);  //Turn off Gun LED's
       break;
-    case NORMAL: // Wand is ON and Pack is ON
-      setWandLightState(WhiteLED2, 1, 0);    //  set back light white
-      setWandLightState(WandVentLED, 1, 0);    //  set wand vent led white // WandVentLED now has a start and end
-      setWandLightState(SloBloLED, 0, 0);    //  set sloblo  led OFF
+    case NORMAL:                              // Wand is ON and Pack is ON
+      setWandLightState(WhiteLED2, 1, 0);     //  set back light white
+      setWandLightState(WandVentLED, 1, 0);   //  set wand vent led white // WandVentLED now has a start and end
+      setWandLightState(SloBloLED, 0, 0);     //  set sloblo  led OFF
       setWandLightState(WhiteLED1, 4, 0);     // Top LED off
-      setWandLightState(OrangeHatLED, 4, 0); // Set gun button 2 LED OFF
+      setWandLightState(OrangeHatLED, 4, 0);  // Set gun button 2 LED OFF
       //setVentLightState(ventStart, ventEnd, 2); // ventStart and ventEnd have been removed
-      clearGunLEDs(); //Turn off Gun LED's
+      clearGunLEDs();  //Turn off Gun LED's
       break;
     case FIRING:
-      setWandLightState(WhiteLED1, 10, currentMillis); //set white led slow blinking
+      setWandLightState(WhiteLED1, 10, currentMillis);  //set white led slow blinking
       fireStrobe(currentMillis);
       break;
     case WARNING:
-      setWandLightState(WhiteLED2, 6, currentMillis); //set white led slow blinking
-      setWandLightState(WhiteLED1, 10, currentMillis); //set white led slow blinking
+      setWandLightState(WhiteLED2, 6, currentMillis);   //set white led slow blinking
+      setWandLightState(WhiteLED1, 10, currentMillis);  //set white led slow blinking
       fireStrobe(currentMillis);
       break;
     case FASTWARNING:
-      setWandLightState(WhiteLED2, 5, currentMillis); //set white led fast blinking
-      setWandLightState(WhiteLED1, 10, currentMillis); //set white led slow blinking
+      setWandLightState(WhiteLED2, 5, currentMillis);   //set white led fast blinking
+      setWandLightState(WhiteLED1, 10, currentMillis);  //set white led slow blinking
       fireStrobe(currentMillis);
       break;
     case VENTSTATE:
       //setVentLightState(ventStart, ventEnd, 0); // ventStart and ventEnd have been removed
-      setWandLightState(OrangeHatLED, 4, 0); // Set gun button 2 LED OFF
-      setWandLightState(SloBloLED, 4, 0);    //  set sloblo  led OFF
-      clearGunLEDs(); //Turn off Gun LED's
+      setWandLightState(OrangeHatLED, 4, 0);  // Set gun button 2 LED OFF
+      setWandLightState(SloBloLED, 4, 0);     //  set sloblo  led OFF
+      clearGunLEDs();                         //Turn off Gun LED's
       break;
     case STREAMCROSS:
       break;
   }
 
-  if (STATUS != OFF && STATUS != POWERDOWN)
-  {
-    switch ( THEME )
-    {
-      case MOVIE: // Set the theme white
+  if (STATUS != OFF && STATUS != POWERDOWN) {
+    switch (THEME) {
+      case MOVIE:  // Set the theme white
         setWandLightState(ThemeLED, 4, 0);
         break;
-      case STATIS: // Set the theme blue
+      case STATIS:  // Set the theme blue
         setWandLightState(ThemeLED, 4, 0);
         break;
-      case SLIME: // Set the theme greene
+      case SLIME:  // Set the theme greene
         setWandLightState(ThemeLED, 9, 0);
         break;
-      case MESON: // Set the theme yellow
+      case MESON:  // Set the theme yellow
         setWandLightState(ThemeLED, 12, 0);
         break;
-      case CHRISTMAS: // Set the theme flashing red / green
+      case CHRISTMAS:  // Set the theme flashing red / green
         setWandLightState(ThemeLED, 11, currentMillis);
         break;
     }
-  }
-  else
-  {
+  } else {
     setWandLightState(ThemeLED, 4, 0);
   }
   wandLights.show();
@@ -869,12 +794,12 @@ void WandLightState(unsigned long currentMillis)
 /*************** Wand Light Helpers *********************
     Modified from Eric Bankers source
 */
-unsigned long prevFlashMillis = 0; // Last time we changed wand sequence 1
-unsigned long prevFlashMillis2 = 0; // Last time we changed wand sequence 2
-unsigned long prevFlashMillis3 = 0; // Last time we changed wand sequence 3
-unsigned long prevFlashMillis4 = 0; // Last time we changed wand sequence 4
-unsigned long prevFlashMillis5 = 0; // Last time we changed wand sequence 4
-unsigned long prevFlashMillis6 = 0; // Last time we changed wand sequence 4
+unsigned long prevFlashMillis = 0;   // Last time we changed wand sequence 1
+unsigned long prevFlashMillis2 = 0;  // Last time we changed wand sequence 2
+unsigned long prevFlashMillis3 = 0;  // Last time we changed wand sequence 3
+unsigned long prevFlashMillis4 = 0;  // Last time we changed wand sequence 4
+unsigned long prevFlashMillis5 = 0;  // Last time we changed wand sequence 4
+unsigned long prevFlashMillis6 = 0;  // Last time we changed wand sequence 4
 
 bool flashState1 = false;
 bool flashState2 = false;
@@ -882,30 +807,30 @@ bool flashState3 = false;
 bool flashState4 = false;
 bool flashState5 = false;
 bool flashState6 = false;
-const unsigned long wandFastFlashInterval = 100; // interval at which we flash the top led on the wand
-const unsigned long wandMediumFlashInterval = 500; // interval at which we flash the top led on the wand
+const unsigned long wandFastFlashInterval = 100;    // interval at which we flash the top led on the wand
+const unsigned long wandMediumFlashInterval = 500;  // interval at which we flash the top led on the wand
 
 void setWandLightState(int lednum, int state, unsigned long currentMillis) {
-  switch ( state ) {
-    case 0: // set led red
+  switch (state) {
+    case 0:  // set led red
       wandLights.setPixelColor(lednum, wandLights.Color(255, 0, 0));
       break;
-    case 1: // set led white
+    case 1:  // set led white
       wandLights.setPixelColor(lednum, wandLights.Color(255, 255, 255));
       break;
-    case 2: // set led orange
+    case 2:  // set led orange
       wandLights.setPixelColor(lednum, wandLights.Color(255, 127, 0));
       break;
-    case 3: // set led blue
+    case 3:  // set led blue
       wandLights.setPixelColor(lednum, wandLights.Color(0, 0, 255));
       break;
-    case 4: // set led off
+    case 4:  // set led off
       wandLights.setPixelColor(lednum, 0);
       break;
-    case 5: // fast white flashing
+    case 5:  // fast white flashing
       if ((unsigned long)(currentMillis - prevFlashMillis) >= wandFastFlashInterval) {
         prevFlashMillis = currentMillis;
-        if ( flashState1 == false ) {
+        if (flashState1 == false) {
           wandLights.setPixelColor(lednum, wandLights.Color(255, 255, 255));
           flashState1 = true;
         } else {
@@ -914,10 +839,10 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
         }
       }
       break;
-    case 6: // slower orange flashing
+    case 6:  // slower orange flashing
       if ((unsigned long)(currentMillis - prevFlashMillis2) >= wandMediumFlashInterval) {
         prevFlashMillis2 = currentMillis;
-        if ( flashState2 == false ) {
+        if (flashState2 == false) {
           wandLights.setPixelColor(lednum, wandLights.Color(255, 255, 255));
           //wandLights.setPixelColor(lednum, wandLights.Color(255, 127, 0));
           flashState2 = true;
@@ -927,10 +852,10 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
         }
       }
       break;
-    case 7: // medium red flashing
+    case 7:  // medium red flashing
       if ((unsigned long)(currentMillis - prevFlashMillis3) >= wandMediumFlashInterval) {
         prevFlashMillis3 = currentMillis;
-        if ( flashState3 == false ) {
+        if (flashState3 == false) {
           wandLights.setPixelColor(lednum, wandLights.Color(255, 0, 0));
           flashState3 = true;
         } else {
@@ -939,10 +864,10 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
         }
       }
       break;
-    case 8: // fast red flashing
+    case 8:  // fast red flashing
       if ((unsigned long)(currentMillis - prevFlashMillis4) >= wandFastFlashInterval) {
         prevFlashMillis4 = currentMillis;
-        if ( flashState4 == false ) {
+        if (flashState4 == false) {
           wandLights.setPixelColor(lednum, wandLights.Color(255, 0, 0));
           flashState4 = true;
         } else {
@@ -951,13 +876,13 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
         }
       }
       break;
-    case 9: // set LED green
+    case 9:  // set LED green
       wandLights.setPixelColor(lednum, wandLights.Color(0, 255, 0));
       break;
-    case 10: // slower orange flashing
+    case 10:  // slower orange flashing
       if ((unsigned long)(currentMillis - prevFlashMillis5) >= wandMediumFlashInterval) {
         prevFlashMillis5 = currentMillis;
-        if ( flashState5 == false ) {
+        if (flashState5 == false) {
           wandLights.setPixelColor(lednum, 0);
           flashState5 = true;
         } else {
@@ -966,10 +891,10 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
         }
       }
       break;
-    case 11: // slower orange flashing
+    case 11:  // slower orange flashing
       if ((unsigned long)(currentMillis - prevFlashMillis6) >= wandMediumFlashInterval) {
         prevFlashMillis6 = currentMillis;
-        if ( flashState6 == false ) {
+        if (flashState6 == false) {
           wandLights.setPixelColor(lednum, wandLights.Color(0, 255, 0));
           flashState6 = true;
         } else {
@@ -978,10 +903,9 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
         }
       }
       break;
-    case 12: // set led yellow
+    case 12:  // set led yellow
       wandLights.setPixelColor(lednum, wandLights.Color(129, 126, 0));
       break;
-
   }
   wandLights.show();
 }
@@ -990,59 +914,48 @@ void setWandLightState(int lednum, int state, unsigned long currentMillis) {
 
 
 /*************** Vent Light *************************/
-void setVentLightState(int startLed, int endLed, int state ) {
-  switch ( state ) {
-    case 0: // set all leds to white
+void setVentLightState(int startLed, int endLed, int state) {
+  switch (state) {
+    case 0:  // set all leds to white
       for (int i = startLed; i <= endLed; i++) {
         wandLights.setPixelColor(i, wandLights.Color(255, 255, 255));
       }
       // Set the relay to on while venting. If relay is off set the pin LOW
-      digitalWrite (VENTING, HIGH);
+      digitalWrite(VENTING, HIGH);
       break;
-    case 1: // set all leds to blue
+    case 1:  // set all leds to blue
       for (int i = startLed; i <= endLed; i++) {
         wandLights.setPixelColor(i, wandLights.Color(0, 0, 255));
       }
       // Set the relay to on while venting. If relay is off set the pin LOW
-      digitalWrite (VENTING, HIGH);
+      digitalWrite(VENTING, HIGH);
       break;
-    case 2: // set all leds off
+    case 2:  // set all leds off
       for (int i = startLed; i <= endLed; i++) {
         wandLights.setPixelColor(i, 0);
       }
       // Set the relay to OFF while not venting. If relay is onf set the pin HIGH
-      digitalWrite (VENTING, LOW);
+      digitalWrite(VENTING, LOW);
       break;
   }
 }
 
 
 // ** Testing a new function to optimize the DFPlayer to improve conflicts ** //
-void PlayDFPLayerHelper(unsigned long currentMillis)
-{
-  if (DFPTrack == IdleMovieLoop)
-  {
+void PlayDFPLayerHelper(unsigned long currentMillis) {
+  if (DFPTrack == IdleMovieLoop) {
     IntervalDFPMillis = 5000;
-  }
-  else
-  {
+  } else {
     IntervalDFPMillis = 20;
   }
-  if ((currentMillis - prevDFPMillis) >= IntervalDFPMillis)
-  {
-    if (prevDFPMillis == 0)
-    {
+  if ((currentMillis - prevDFPMillis) >= IntervalDFPMillis) {
+    if (prevDFPMillis == 0) {
       prevDFPMillis = currentMillis;
-    }
-    else
-    {
+    } else {
       prevDFPMillis = currentMillis;
-      if (playType == 0)
-      {
+      if (playType == 0) {
         myDFPlayer.play(DFPTrack);
-      }
-      else if (playType == 1)
-      {
+      } else if (playType == 1) {
         myDFPlayer.loop(DFPTrack);
       }
       DFPlayerStart = false;
@@ -1052,130 +965,87 @@ void PlayDFPLayerHelper(unsigned long currentMillis)
 }
 
 
-void PlaySoundTrack(int Track) //enum WandSLEDState { ALLOFF, WANDONLY, NORMAL, FIRING, WARNING, FASTWARNING, VENTSTATE };
+void PlaySoundTrack(int Track)  //enum WandSLEDState { ALLOFF, WANDONLY, NORMAL, FIRING, WARNING, FASTWARNING, VENTSTATE };
 {
-  switch (THEME) // MOVIE, STATIS, SLIME, MESON, CHRISTMAS
+  switch (THEME)  // MOVIE, STATIS, SLIME, MESON, CHRISTMAS
   {
     case MOVIE:
-      if (Track == FIRING)
-      {
+      if (Track == FIRING) {
         myDFPlayer.loop(FireMovie);
-      }
-      else if (Track == FASTWARNING)
-      {
-        if (fire == true && fire2 == false)
-        {
+      } else if (Track == FASTWARNING) {
+        if (fire == true && fire2 == false) {
           myDFPlayer.loop(warnCrossStreams);
-        }
-        else
-        {
+        } else {
           myDFPlayer.loop(warnMovie);
         }
 
-      }
-      else if (Track == NORMAL)
-      {
+      } else if (Track == NORMAL) {
         //        DFPlayerStart = true;
         //        DFPTrack = MovieTail;
         //        playType = 0;
         myDFPlayer.play(MovieTail);
-      }
-      else if (Track == STREAMCROSS)
-      {
+      } else if (Track == STREAMCROSS) {
         myDFPlayer.play(FireCrossStreams);
       }
       break;
     case STATIS:
-      if (Track == FIRING)
-      {
+      if (Track == FIRING) {
         myDFPlayer.loop(FireAfterlife);
-      }
-      else if (Track == FASTWARNING)
-      {
-        if (fire == true && fire2 == false)
-        {
+      } else if (Track == FASTWARNING) {
+        if (fire == true && fire2 == false) {
           myDFPlayer.loop(warnCrossStreams);
-        }
-        else
-        {
+        } else {
           myDFPlayer.loop(warnAfterlife);
         }
 
-      }
-      else if (Track == NORMAL)
-      {
+      } else if (Track == NORMAL) {
         myDFPlayer.play(MovieTail);
-      }
-      else if (Track == STREAMCROSS)
-      {
+      } else if (Track == STREAMCROSS) {
         myDFPlayer.play(FireAfterlife);
       }
       break;
     case SLIME:
-      if (Track == FIRING)
-      {
+      if (Track == FIRING) {
         myDFPlayer.loop(FireSlime);
-      }
-      else if (Track == FASTWARNING)
-      {
+      } else if (Track == FASTWARNING) {
         myDFPlayer.loop(warnSlime);
-      }
-      else if (Track == NORMAL)
-      {
+      } else if (Track == NORMAL) {
         myDFPlayer.play(SlimeTail);
       }
       break;
     case MESON:
-      if (Track == FIRING)
-      {
+      if (Track == FIRING) {
         myDFPlayer.loop(FireMeson);
-      }
-      else if (Track == FASTWARNING)
-      {
+      } else if (Track == FASTWARNING) {
         myDFPlayer.loop(warnMeson);
-      }
-      else if (Track == NORMAL)
-      {
+      } else if (Track == NORMAL) {
         myDFPlayer.play(MesonTail);
       }
       break;
     case CHRISTMAS:
-      if (Track == FIRING)
-      {
+      if (Track == FIRING) {
         myDFPlayer.loop(FireChristmas);
-      }
-      else if (Track == FASTWARNING)
-      {
+      } else if (Track == FASTWARNING) {
         myDFPlayer.loop(warnMovie);
-      }
-      else if (Track == NORMAL)
-      {
+      } else if (Track == NORMAL) {
         myDFPlayer.play(ChristmasTail);
       }
       break;
   }
-
 }
 
-void getWandSTATUS()
-{
-  if (startwand == true and startpack == true)
-  {
+void getWandSTATUS() {
+  if (startwand == true and startpack == true) {
     WANDSTATUS = ON_PACK;
-  }
-  else if (startwand == true and startpack == false)
-  {
+  } else if (startwand == true and startpack == false) {
     WANDSTATUS = ON;
-  }
-  else
-  {
+  } else {
     WANDSTATUS = WANDOFF;
   }
 }
 
 // Startup / Shutdown functions that clear all the LEDs
-void clearLEDs()
-{
+void clearLEDs() {
   //  for (int i = 0; i <= NeoPixelLEDCountPack; i++) {
   //    PackLEDs.setPixelColor(i, 0);
   //  }
@@ -1184,8 +1054,7 @@ void clearLEDs()
   }
 }
 
-void clearGunLEDs()
-{
+void clearGunLEDs() {
   for (int i = GunLEDStart; i <= GunLEDEnd; i++) {
     wandLights.setPixelColor(i, 0);
   }
@@ -1197,29 +1066,29 @@ void clearGunLEDs()
    enum PackTheme { MOVIE = 0, STATIS = 1, SLIME = 2, MESON = 3, CHRISTMAS = 4 };
 */
 
-unsigned long ThemeGunColors1[5]  = {255, 255, 0, 255, 255};
-unsigned long ThemeGunColors2[5]  = {255, 255, 255, 255, 0};
-unsigned long ThemeGunColors3[5]  = {255, 255, 0, 0, 0};
+unsigned long ThemeGunColors1[5] = { 255, 255, 0, 255, 255 };
+unsigned long ThemeGunColors2[5] = { 255, 255, 255, 255, 0 };
+unsigned long ThemeGunColors3[5] = { 255, 255, 0, 0, 0 };
 
-unsigned long ThemeGunColors12[5]  = {255, 255, 0, 255, 0};
-unsigned long ThemeGunColors22[5]  = {0, 0, 255, 255, 255};
-unsigned long ThemeGunColors32[5]  = {0, 0, 0, 0, 0};
+unsigned long ThemeGunColors12[5] = { 255, 255, 0, 255, 0 };
+unsigned long ThemeGunColors22[5] = { 0, 0, 255, 255, 255 };
+unsigned long ThemeGunColors32[5] = { 0, 0, 0, 0, 0 };
 
-unsigned long ThemeGunColors13[5]  = {0, 0, 0, 0, 0};
-unsigned long ThemeGunColors23[5]  = {0, 0, 0, 0, 0};
-unsigned long ThemeGunColors33[5]  = {255, 255, 0, 0, 0};
+unsigned long ThemeGunColors13[5] = { 0, 0, 0, 0, 0 };
+unsigned long ThemeGunColors23[5] = { 0, 0, 0, 0, 0 };
+unsigned long ThemeGunColors33[5] = { 255, 255, 0, 0, 0 };
 
-unsigned long ThemeGunColors14[5]  = {255, 255, 0, 0, 0};
-unsigned long ThemeGunColors24[5]  = {0, 0, 0, 0, 0};
-unsigned long ThemeGunColors34[5]  = {255, 255, 0, 0, 0};
+unsigned long ThemeGunColors14[5] = { 255, 255, 0, 0, 0 };
+unsigned long ThemeGunColors24[5] = { 0, 0, 0, 0, 0 };
+unsigned long ThemeGunColors34[5] = { 255, 255, 0, 0, 0 };
 
-unsigned long ThemeGunColors15[5]  = {0, 0, 0, 0, 0};
-unsigned long ThemeGunColors25[5]  = {255, 255, 0, 0, 0};
-unsigned long ThemeGunColors35[5]  = {0, 0, 0, 0, 0};
+unsigned long ThemeGunColors15[5] = { 0, 0, 0, 0, 0 };
+unsigned long ThemeGunColors25[5] = { 255, 255, 0, 0, 0 };
+unsigned long ThemeGunColors35[5] = { 0, 0, 0, 0, 0 };
 
 /*************** Firing Animations *********************/
 unsigned long prevFireMillis = 0;
-const unsigned long fire_interval2 = 50;     // interval at which to cycle lights (milliseconds).
+const unsigned long fire_interval2 = 50;  // interval at which to cycle lights (milliseconds).
 int fireSeqNum = 0;
 int fireSeqTotal = 5;
 
@@ -1227,7 +1096,7 @@ void fireStrobe(unsigned long currentMillis) {
   if ((unsigned long)(currentMillis - prevFireMillis) >= fire_interval2) {
     prevFireMillis = currentMillis;
 
-    switch ( fireSeqNum ) {
+    switch (fireSeqNum) {
       case 0:
         wandLights.setPixelColor(10, wandLights.Color(ThemeGunColors1[THEME], ThemeGunColors2[THEME], ThemeGunColors3[THEME]));
         wandLights.setPixelColor(11, wandLights.Color(ThemeGunColors1[THEME], ThemeGunColors2[THEME], ThemeGunColors3[THEME]));
@@ -1288,7 +1157,7 @@ void fireStrobe(unsigned long currentMillis) {
     wandLights.show();
 
     fireSeqNum++;
-    if ( fireSeqNum > fireSeqTotal ) {
+    if (fireSeqNum > fireSeqTotal) {
       fireSeqNum = 0;
     }
   }
