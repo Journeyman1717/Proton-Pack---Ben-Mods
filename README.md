@@ -1,15 +1,10 @@
-In GBLEDPatterns.h find where the cyclotron LED's (40 or 50) are addressed. They would have been the first in the sequencee but now are the last. See notes at the top of the files.
+I have moved the Cyclotron to Pin 10 and created a second object in the NeoPatterns Class caleed CycLEDs, the first Object was PackLEDs.
+  CycLEDs are RGB LEDs on Pin 10
+  PackLEDs are on Pin 2 and are all RGBW with additional lights in the Booster Tube, HGA and NFilter.
 
-Determine how to mix GRBW and GRB LEDs in the same dataconnection LED's in the cyclotron are GRB and the LED's elsewhere are GRBW.
-  Looks like you cant mix RGB and RGBW LED's in the same "string" like i did, I will have to find a new Output pin for the Cyclotron. This may make the above change moot.
-  https://forums.adafruit.com/viewtopic.php?t=110803
-
-PIN 10 currently has no connection. I could move the Cyclotron to Pin 10 (50 LEDs)  But we would need to seperate the Power Cell Code from the Cyclotron Code.
-
+ISSUE
+Only the first object in the class is being called. If I the order in which the objects are declaired, the LEDs connected to the first object are functional and the LEDs connected to the second object are not.
 
 Additional Libraries needed:
 DFPlayerMini_Fast
 FastLED
-
-Optional:
-  Add the additional Functions as time permits.
